@@ -1,5 +1,4 @@
 
-  describe file('/tmp') do
-    it { should be_directory }
-  end
-
+describe file('/tmp') do
+  it { should be_directory }
+end
