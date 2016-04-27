@@ -31,4 +31,12 @@ control '1.2.2 Verify that gpgcheck is Globally Activated' do
   describe file('/etc/yum.conf') do
     its(:content) { should match /^gpgcheck=1/ }
   end
+
+  options = {
+    assignment_re: /^\s*([^=]*?)\s*=\s*(.*?)\s*$/,
+    comment_char: '[' # parse_config_file seems to be choking on '[main]' so let's set '[' as a comment character
+  }
+  describe parse_config_file('/etc/yum.conf', options) do
+    its('gpgcheck') { should cmp 1 }
+  end
 end
