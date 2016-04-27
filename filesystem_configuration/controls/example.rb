@@ -40,3 +40,26 @@ control '1.2.2 Verify that gpgcheck is Globally Activated' do
     its('gpgcheck') { should cmp 1 }
   end
 end
+
+control '1.5.1 Set User/Group Owner on /etc/grub.conf' do
+  impact 1.0
+  title '/etc/grub.conf is owned by root user and root group'
+  desc <<-EOF
+    Set the owner and group of /etc/grub.conf to the root user.
+
+    Setting the owner and group to root prevents non-root users from changing the file.
+  EOF
+
+  describe file('/etc/grub.conf') do
+    it { should be_owned_by 'root' }
+    it { should be_grouped_into 'root' }
+    it { should be_symlink }
+    it { should be_linked_to '/boot/grub/grub.conf'}
+  end
+
+  describe file('/boot/grub/grub.conf') do
+    it { should be_owned_by 'root' }
+    it { should be_grouped_into 'root' }
+    it { should be_file }
+  end
+end
