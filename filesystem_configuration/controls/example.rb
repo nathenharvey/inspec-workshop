@@ -85,3 +85,26 @@ control '1.5.2 Set Permissions on /etc/grub.conf' do
     its('mode') { should eq 0600 }
   end
 end
+
+control '1.5.3 Set Boot Loader Password' do
+  impact 1.0
+  title 'Set Boot Loader Password'
+  desc <<-EOF
+    Setting the boot loader password will require that the person who is rebooting the must enter a password before being able to set command line boot parameters
+
+    Requiring a boot password upon execution of the boot loader will prevent an unauthorized user from entering boot parameters or changing the boot partition. This prevents users from weakening security (e.g. turning off SELinux at boot time).
+  EOF
+
+  describe file('/etc/grub.conf') do
+    it { should be_owned_by 'root' }
+    it { should be_grouped_into 'root' }
+    it { should be_symlink }
+    it { should be_linked_to '/boot/grub/grub.conf'}
+  end
+
+  describe file('/boot/grub/grub.conf') do
+    it { should be_file }
+    its('content') { should match /^password --md5/ }
+  end
+
+end
