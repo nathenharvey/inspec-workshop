@@ -63,3 +63,25 @@ control '1.5.1 Set User/Group Owner on /etc/grub.conf' do
     it { should be_file }
   end
 end
+
+control '1.5.2 Set Permissions on /etc/grub.conf' do
+  impact 1.0
+  title '/etc/grub.conf is only readable and writeable by root'
+  desc <<-EOF
+    Set permission on the /etc/grub.conf file to read and write for root only.
+
+    Setting the permissions to read and write for root only prevents non-root users from seeing the boot parameters or changing them. Non-root users who read the boot parameters may be able to identify weaknesses in security upon boot and be able to exploit them.
+  EOF
+
+  describe file('/etc/grub.conf') do
+    it { should be_owned_by 'root' }
+    it { should be_grouped_into 'root' }
+    it { should be_symlink }
+    it { should be_linked_to '/boot/grub/grub.conf'}
+  end
+
+  describe file('/boot/grub/grub.conf') do
+    it { should be_file }
+    its('mode') { should eq 0600 }
+  end
+end
