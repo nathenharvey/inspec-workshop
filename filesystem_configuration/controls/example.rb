@@ -18,3 +18,17 @@ control '1.2.1 Verify CentOS GPG Key is Installed' do
     its('stdout') { should match /C1DA C52D 1664 E8A4 386D  BA43 0946 FCA2 C105 B9DE/ }
   end
 end
+
+control '1.2.2 Verify that gpgcheck is Globally Activated' do
+  impact 1.0
+  title 'Verify that gpgcheck is Globally Activate'
+  desc <<-EOF
+    The gpgcheck option, found in the main section of the /etc/yum.conf file determines if an RPM package's signature is always checked prior to its installation.
+
+    It is important to ensure that an RPM's package signature is always checked prior to installation to ensure that the software is obtained from a trusted source.
+  EOF
+
+  describe file('/etc/yum.conf') do
+    its(:content) { should match /^gpgcheck=1/ }
+  end
+end
