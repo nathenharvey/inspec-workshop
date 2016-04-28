@@ -1,0 +1,7 @@
+name 'grub'
+maintainer 'The Authors'
+maintainer_email 'you@example.com'
+license 'all_rights'
+description 'Installs/Configures grub'
+long_description 'Installs/Configures grub'
+version '0.1.0'
